@@ -15,7 +15,7 @@
 module load singularity/3.7.1
 ## set directories
 tag=APS017.1
-pipeline_dir=$HOME/fragpipe-smk
+pipeline_dir=$HOME/xengsort-smk
 #logdir=${submitdir}/log
 outdir=/data1/shahs3/users/preskaa/${tag}_Archive/
 config_yaml=config/config.yml
