@@ -10,6 +10,7 @@ singularity: "docker://quay.io/biocontainers/xengsort:2.0.8--pyhdfd78af_0"
 ## params
 human_ref = config["human_refgenome"]
 mouse_ref = config["mouse_refgenome"]
+sample_id = config["sample_id"]
 out_dir = config["out_dir"]
 
 rule all:
@@ -29,7 +30,7 @@ rule build_index:
         index_hash = os.path.join(out_dir, "xengsort", "xengsort-k25.hash"),
         index_info = os.path.join(out_dir, "xengsort", "xengsort-k25.info")
     params:
-        index = os.path.join(out_dir, "xengsort", "xengsort"),
+        index = os.path.join(out_dir, "xengsort", "xengsort-k25"),
         size = 4_500_000_000,
         k = 25,
         debug="-DD",  # debug level 2
@@ -41,3 +42,24 @@ rule build_index:
         "xengsort {params.debug} index --index {params.index} \
         -G {input.dna_human} -H {input.dna_mouse} \
         -n {params.size} -W {threads} -k {params.k}"
+
+# A rule that demonstrates 'xengsort classify'
+# (In principle, ALL output files should be listed, but all are created together,
+#  so if we successfully get the -host.?.fq files, we get all of them.
+#  And we do not need to process them any further.)
+
+rule classify_sample:
+    input:
+        index_hash = os.path.join(out_dir,"xengsort","xengsort-k25.hash"),
+        index_info = os.path.join(out_dir,"xengsort","xengsort-k25.info"),
+        fastq1 = fastq1,
+        fastq2 = fastq2
+    threads: 8
+    params:
+        index = os.path.join(out_dir, "xengsort", "xengsort-k25"),
+        debug="-DD",
+        outprefix=os.path.join(out_dir, "results", sample_id + "-k25")
+    shell:
+        "xengsort {params.debug} classify --out {params.outprefix} \
+        --index {params.index} --threads {threads} \
+        --fastq {input.fastq1} --pairs {input.fastq2}"
