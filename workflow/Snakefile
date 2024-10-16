@@ -1,0 +1,41 @@
+from snakemake.utils import min_version
+import os
+
+##### set minimum snakemake version #####
+min_version("7.31.1")
+
+### set singularity container for all rules
+singularity: "docker://quay.io/biocontainers/xengsort:2.0.8--pyhdfd78af_0"
+
+## params
+human_ref = config["human_refgenome"]
+mouse_ref = config["mouse_refgenome"]
+out_dir = config["out_dir"]
+
+rule all:
+    input:
+        os.path.join(out_dir,"xengsort","xengsort.hash"),
+        os.path.join(out_dir,"xengsort","xengsort.info")
+
+# A rule that demonstrates how to build an index with xengsort
+# Note that you need to give an estimate of the number of k-mers in all input files.
+# For human and mouse DNA and cDNA, and k=25, this is approx. 4.5 billion,
+# so this number is given as size parameter below.
+rule build_index:
+    input:
+        dna_human=human_ref,
+        dna_mouse=mouse_ref
+    output:
+        index_hash = os.path.join(out_dir, "xengsort", "xengsort.hash"),
+        index_info = os.path.join(out_dir, "xengsort", "xengsort.info")
+    params:
+        index = os.path.join(out_dir, "xengsort", "xengsort"),
+        size = 4_500_000_000
+    threads: 11
+    resources:
+        mem_mb = 50000,
+        time = 360
+    shell:
+        "xengsort index --index {params.index} \
+        -G {input.dna_human} -H {input.dna_mouse} \
+        -n {params.size} -W {threads}"
