@@ -2,3 +2,4 @@
 out_dir: /data1/shahs3/users/preskaa/APS010.1_Archive
 mouse_refgenome: /data1/shahs3/isabl_data_lake/assemblies/WGS-MM10/mouse/mm10_build38_mouse.fasta
 human_refgenome: /data1/shahs3/isabl_data_lake/assemblies/GRCh38-P14/GRCh38.primary_assembly.genome.fa
+sample_id: ""

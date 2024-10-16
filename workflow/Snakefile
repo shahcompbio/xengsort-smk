@@ -16,7 +16,9 @@ out_dir = config["out_dir"]
 rule all:
     input:
         os.path.join(out_dir,"xengsort","xengsort-k25.hash"),
-        os.path.join(out_dir,"xengsort","xengsort-k25.info")
+        os.path.join(out_dir,"xengsort","xengsort-k25.info"),
+        # expand(os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
+        #     sample=sample_id)
 
 # A rule that demonstrates how to build an index with xengsort
 # Note that you need to give an estimate of the number of k-mers in all input files.
@@ -54,12 +56,17 @@ rule classify_sample:
         index_info = os.path.join(out_dir,"xengsort","xengsort-k25.info"),
         fastq1 = fastq1,
         fastq2 = fastq2
+    output:
+        host1 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
+        host2 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.2.fq.gz"),
     threads: 8
     params:
         index = os.path.join(out_dir, "xengsort", "xengsort-k25"),
         debug="-DD",
-        outprefix=os.path.join(out_dir, "results", sample_id + "-k25")
+        outprefix=os.path.join(out_dir,"xengsort", "{sample}-k25"),
+        chunksize=16.0
     shell:
         "xengsort {params.debug} classify --out {params.outprefix} \
         --index {params.index} --threads {threads} \
-        --fastq {input.fastq1} --pairs {input.fastq2}"
+        --fastq {input.fastq1} --pairs {input.fastq2} \
+        --chunksize {params.chunksize} -P"
