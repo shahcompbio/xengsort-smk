@@ -54,8 +54,8 @@ rule classify_sample:
     input:
         index_hash = os.path.join(out_dir,"xengsort","xengsort-k25.hash"),
         index_info = os.path.join(out_dir,"xengsort","xengsort-k25.info"),
-        fastq1 = fastq1,
-        fastq2 = fastq2
+        # fastq1 = fastq1,
+        # fastq2 = fastq2
     output:
         host1 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
         host2 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.2.fq.gz"),
