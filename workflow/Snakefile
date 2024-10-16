@@ -14,8 +14,8 @@ out_dir = config["out_dir"]
 
 rule all:
     input:
-        os.path.join(out_dir,"xengsort","xengsort.hash"),
-        os.path.join(out_dir,"xengsort","xengsort.info")
+        os.path.join(out_dir,"xengsort","xengsort-k25.hash"),
+        os.path.join(out_dir,"xengsort","xengsort-k25.info")
 
 # A rule that demonstrates how to build an index with xengsort
 # Note that you need to give an estimate of the number of k-mers in all input files.
