@@ -31,12 +31,13 @@ rule build_index:
     params:
         index = os.path.join(out_dir, "xengsort", "xengsort"),
         size = 4_500_000_000,
-        k = 25
+        k = 25,
+        debug="-DD",  # debug level 2
     threads: 11
     resources:
         mem_mb = 50000,
         time = 360
     shell:
-        "xengsort index --index {params.index} \
+        "xengsort {params.debug} index --index {params.index} \
         -G {input.dna_human} -H {input.dna_mouse} \
         -n {params.size} -W {threads} -k {params.k}"
