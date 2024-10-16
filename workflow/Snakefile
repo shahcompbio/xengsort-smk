@@ -12,13 +12,17 @@ human_ref = config["human_refgenome"]
 mouse_ref = config["mouse_refgenome"]
 sample_id = config["sample_id"]
 out_dir = config["out_dir"]
+fastq1 = config["fastq1"]
+fastq2 = config["fastq2"]
 
 rule all:
     input:
         os.path.join(out_dir,"xengsort","xengsort-k25.hash"),
         os.path.join(out_dir,"xengsort","xengsort-k25.info"),
-        # expand(os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
-        #     sample=sample_id)
+        expand(os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
+            sample=sample_id),
+        expand(os.path.join(out_dir,"xengsort/{sample}.filtered.fastq.gz"),
+            sample=sample_id)
 
 # A rule that demonstrates how to build an index with xengsort
 # Note that you need to give an estimate of the number of k-mers in all input files.
@@ -54,11 +58,11 @@ rule classify_sample:
     input:
         index_hash = os.path.join(out_dir,"xengsort","xengsort-k25.hash"),
         index_info = os.path.join(out_dir,"xengsort","xengsort-k25.info"),
-        # fastq1 = fastq1,
-        # fastq2 = fastq2
+        fastq1 = fastq1,
+        fastq2 = fastq2
     output:
-        host1 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
-        host2 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.2.fq.gz"),
+        graft1 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
+        graft2 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.2.fq.gz"),
     threads: 8
     params:
         index = os.path.join(out_dir, "xengsort", "xengsort-k25"),
@@ -70,3 +74,15 @@ rule classify_sample:
         --index {params.index} --threads {threads} \
         --fastq {input.fastq1} --pairs {input.fastq2} \
         --chunksize {params.chunksize} -P"
+
+### combine graft output into a single fastq ....
+rule combine_fastqs:
+    input:
+        graft1 = os.path.join(out_dir,"xengsort/{sample}-k25-graft.1.fq.gz"),
+        graft2 = os.path.join(out_dir,"xengsort/{sample}-k25-graft.2.fq.gz"),
+    output:
+        filtered_fastq = os.path.join(out_dir,"xengsort/{sample}.filtered.fastq.gz")
+    params:
+        grafts = os.path.join(out_dir,"{sample}-k25-graft.*.fq.gz")
+    shell:
+        "cat {params.grafts} > {output.filtered_fastq}"
