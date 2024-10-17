@@ -42,7 +42,7 @@ snakemake \
   --configfile ${config_yaml}\
   --singularity-prefix /data1/shahs3/users/preskaa/singularity \
   --singularity-args "--bind /data1/shahs3" \
-  --dry-run
+  --containerize > Dockerfile
 
 
 
