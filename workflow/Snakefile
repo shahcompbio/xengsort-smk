@@ -5,7 +5,7 @@ import os
 min_version("7.31.1")
 
 ### set singularity container for all rules
-# singularity: "docker://quay.io/preskaa/xengsort:2.0.8"
+singularity: "docker://quay.io/preskaa/xengsort:2.0.8"
 
 ## params
 human_ref = config["human_refgenome"]
@@ -41,7 +41,6 @@ rule build_index:
         k = 25,
         debug="-DD",  # debug level 2
     threads: 11
-    conda: "../envs/xengsort.yaml"
     resources:
         mem_mb = 50000,
         time = 360
@@ -69,7 +68,6 @@ rule classify_sample:
         debug="-DD",
         outprefix=os.path.join(out_dir,"xengsort", "{sample}-k25"),
         chunksize=16.0
-    conda: "../envs/xengsort.yaml"
     threads: 8
     resources:
         mem_mb = 20000,
@@ -89,7 +87,6 @@ rule combine_fastqs:
         filtered_fastq = os.path.join(out_dir,"xengsort/{sample}.filtered.fastq.gz")
     params:
         grafts = os.path.join(out_dir,"{sample}-k25-graft.*.fq.gz")
-    conda: "../envs/xengsort.yaml"
     threads: 1
     resources:
         mem_mb = 20000,
