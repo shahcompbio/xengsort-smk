@@ -86,7 +86,7 @@ rule combine_fastqs:
     output:
         filtered_fastq = os.path.join(out_dir,"xengsort/{sample}.filtered.fastq.gz")
     params:
-        grafts = os.path.join(out_dir,"{sample}-k25-graft.*.fq.gz")
+        grafts = os.path.join(out_dir,"{sample}-k25-graft.*")
     threads: 1
     resources:
         mem_mb = 20000,
