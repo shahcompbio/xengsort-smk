@@ -76,7 +76,7 @@ rule classify_sample:
         "xengsort {params.debug} classify --out {params.outprefix} \
         --index {params.index} --threads {threads} \
         --fastq {input.fastq1} --pairs {input.fastq2} \
-        --chunksize {params.chunksize} -P"
+        --chunksize {params.chunksize}"
 
 ### combine graft output into a single fastq ....
 rule combine_fastqs:
