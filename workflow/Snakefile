@@ -67,8 +67,9 @@ rule classify_sample:
         index = os.path.join(out_dir, "xengsort", "xengsort-k25"),
         debug="-DD",
         outprefix=os.path.join(out_dir,"xengsort", "{sample}-k25"),
-        chunksize=16.0
-    threads: 8
+        prefetch=1,
+        chunksize=1000 ## in MB
+    threads: 16
     resources:
         mem_mb = 100000,
         time = 720
@@ -76,7 +77,7 @@ rule classify_sample:
         "xengsort {params.debug} classify --out {params.outprefix} \
         --index {params.index} --threads {threads} \
         --fastq {input.fastq1} --pairs {input.fastq2} \
-        --chunksize {params.chunksize} --mode count"
+        --chunksize {params.chunksize} --mode count --prefetchlevel {params.prefetch}"
 
 ### combine graft output into a single fastq ....
 rule combine_fastqs:
