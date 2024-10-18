@@ -1,7 +1,7 @@
 ### boiler plate config
-out_dir: /data1/shahs3/users/preskaa/APS017.1_Archive
+out_dir: /data1/shahs3/users/preskaa/APS017.1_Archive/full_test
 mouse_refgenome: /data1/shahs3/isabl_data_lake/assemblies/WGS-MM10/mouse/mm10_build38_mouse.fasta
 human_refgenome: /data1/shahs3/isabl_data_lake/assemblies/GRCh38-P14/GRCh38.primary_assembly.genome.fa
 sample_id: "TCDO-SAR-034-PDX"
-fastq1: /data1/shahs3/users/preskaa/APS017_Archive/wgs_test_fastq/TCDO-SAR-034-PDX_R1.downsampled.100rds.fastq.gz
-fastq2: /data1/shahs3/users/preskaa/APS017_Archive/wgs_test_fastq/TCDO-SAR-034-PDX_R2.downsampled.100rds.fastq.gz
+fastq1: /data1/shahs3/isabl_data_lake/experiments/12/78/21278/data/SHAH_H003460_T01_02_WG01_188920f778ab35bb_XPRO_0287_T_DNA_IGO_08822_GY_1_S73_R1_001.fastq.gz
+fastq2: /data1/shahs3/isabl_data_lake/experiments/12/78/21278/data/SHAH_H003460_T01_02_WG01_188920f778ab35bb_XPRO_0287_T_DNA_IGO_08822_GY_1_S73_R2_001.fastq.gz

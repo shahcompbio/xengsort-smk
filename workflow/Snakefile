@@ -70,8 +70,8 @@ rule classify_sample:
         chunksize=16.0
     threads: 8
     resources:
-        mem_mb = 20000,
-        time = 360
+        mem_mb = 100000,
+        time = 720
     shell:
         "xengsort {params.debug} classify --out {params.outprefix} \
         --index {params.index} --threads {threads} \
@@ -89,7 +89,7 @@ rule combine_fastqs:
         grafts = os.path.join(out_dir,"xengsort/{sample}-k25-graft.*")
     threads: 1
     resources:
-        mem_mb = 20000,
+        mem_mb = 50000,
         time = 180
     shell:
         "cat {params.grafts} > {output.filtered_fastq}"
