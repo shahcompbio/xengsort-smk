@@ -68,7 +68,7 @@ rule classify_sample:
         debug="-DD",
         outprefix=os.path.join(out_dir,"xengsort", "{sample}-k25"),
         prefetch=1,
-        chunksize=1000 ## in MB
+        chunksize=16.0 ## in MB
     threads: 16
     resources:
         mem_mb = 100000,
