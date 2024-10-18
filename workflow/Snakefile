@@ -72,7 +72,7 @@ rule classify_sample:
     threads: 16
     resources:
         mem_mb = 100000,
-        time = 720
+        time = 1440
     shell:
         "xengsort {params.debug} classify --out {params.outprefix} \
         --index {params.index} --threads {threads} \
