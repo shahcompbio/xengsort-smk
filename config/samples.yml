@@ -1,0 +1,16 @@
+fastqs:
+  HCK22DSXX.1:
+    fastq1: /data1/shahs3/isabl_data_lake/experiments/72/08/17208/data/SHAH_H002190_T01_01_WG01_6815f5edb4606cf8_AK-RT-003-T_IGO_09030_C_1_S9_R1_001.fastq.gz
+    fastq2: /data1/shahs3/isabl_data_lake/experiments/72/08/17208/data/SHAH_H002190_T01_01_WG01_6815f5edb4606cf8_AK-RT-003-T_IGO_09030_C_1_S9_R2_001.fastq.gz
+  HCKYCDSXX.1:
+    fastq1: /data1/shahs3/isabl_data_lake/experiments/72/08/17208/data/SHAH_H002190_T01_01_WG01_3e9e95a4dc10e45c_AK-RT-003-T_IGO_09030_C_1_S12_R1_001.fastq.gz
+    fastq2: /data1/shahs3/isabl_data_lake/experiments/72/08/17208/data/SHAH_H002190_T01_01_WG01_3e9e95a4dc10e45c_AK-RT-003-T_IGO_09030_C_1_S12_R2_001.fastq.gz
+  HCMN3DSXX.4:
+    fastq1: /data1/shahs3/isabl_data_lake/experiments/72/08/17208/data/SHAH_H002190_T01_01_WG01_6488e6dded738edb_AK-RT-003-T_IGO_09030_C_1_S14_R1_001.fastq.gz
+    fastq2: /data1/shahs3/isabl_data_lake/experiments/72/08/17208/data/SHAH_H002190_T01_01_WG01_6488e6dded738edb_AK-RT-003-T_IGO_09030_C_1_S14_R2_001.fastq.gz
+readgroup_info:
+  CN: IGO
+  ID: '{lane_id}'
+  PL: ILLUMINA-NovaSeq-6000
+  PU: '{lane_id}'
+  SM: SHAH_H002190_T01_01_WG01

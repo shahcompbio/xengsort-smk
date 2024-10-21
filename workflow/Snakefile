@@ -1,5 +1,6 @@
 from snakemake.utils import min_version
 import os
+import pandas as pd
 
 ##### set minimum snakemake version #####
 min_version("7.31.1")
@@ -10,21 +11,49 @@ singularity: "docker://quay.io/preskaa/xengsort:2.0.7"
 ## params
 human_ref = config["human_refgenome"]
 mouse_ref = config["mouse_refgenome"]
-sample_id = config["sample_id"]
 out_dir = config["out_dir"]
 fastq1 = config["fastq1"]
 fastq2 = config["fastq2"]
+sample_sheet = config["samples"]
 
+### helper functions ####
+def extract_metadata(sample_sheet):
+    """
+
+    :param sample_sheet: input metadata for samples
+    :return: sample id and lanes for WGS
+    """
+    sample_df = pd.read_csv(sample_sheet)
+    sample_id = list(sample_df["sample_id"])[0]
+    lanes = list(sample_df["lane"])
+    return sample_id, lanes
+
+def _fetch_fastq1(wildcards):
+   sample_df = pd.read_csv(config["samples"])
+   temp = sample_df[sample_df["lane"] == wildcards.lane]
+   fastq = list(temp["fastq_1"])[0]
+   return fastq
+
+def _fetch_fastq2(wildcards):
+   sample_df = pd.read_csv(config["samples"])
+   temp = sample_df[sample_df["lane"] == wildcards.lane]
+   fastq = list(temp["fastq_2"])[0]
+   return fastq
+
+sample_id, lanes = extract_metadata(sample_sheet)
+
+
+### target rule ####
 rule all:
     input:
         os.path.join(out_dir,"xengsort","xengsort-k25.hash"),
         os.path.join(out_dir,"xengsort","xengsort-k25.info"),
-        expand(os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
+        expand(os.path.join(out_dir, "xengsort/{sample}/{lane}/{sample}-k25-graft.1.fq.gz"),
+            sample=sample_id, lane=lanes),
+        expand(os.path.join(out_dir,"xengsort/{sample}/{lane}/{sample}_R1.filtered.fastq.gz"),
             sample=sample_id),
-        expand(os.path.join(out_dir,"xengsort/{sample}_R1.filtered.fastq.gz"),
-            sample=sample_id),
-        expand(os.path.join(out_dir,"xengsort/{sample}_R2.filtered.fastq.gz"),
-            sample=sample_id)
+        expand(os.path.join(out_dir,"xengsort/{sample}/{lane}/{sample}_R2.filtered.fastq.gz"),
+            sample=sample_id, lane=lanes)
 
 # A rule that demonstrates how to build an index with xengsort
 # Note that you need to give an estimate of the number of k-mers in all input files.
@@ -60,15 +89,15 @@ rule classify_sample:
     input:
         index_hash = os.path.join(out_dir,"xengsort","xengsort-k25.hash"),
         index_info = os.path.join(out_dir,"xengsort","xengsort-k25.info"),
-        fastq1 = fastq1,
-        fastq2 = fastq2
+        fastq1 = _fetch_fastq1,
+        fastq2 = _fetch_fastq2
     output:
-        graft1 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
-        graft2 = os.path.join(out_dir, "xengsort/{sample}-k25-graft.2.fq.gz"),
+        graft1 = os.path.join(out_dir, "xengsort/{sample}/{lane}/{sample}-k25-graft.1.fq.gz"),
+        graft2 = os.path.join(out_dir, "xengsort/{sample}/{lane}/{sample}-k25-graft.2.fq.gz"),
     params:
         index = os.path.join(out_dir, "xengsort", "xengsort-k25"),
         debug="-DD",
-        outprefix=os.path.join(out_dir,"xengsort", "{sample}-k25"),
+        outprefix=os.path.join(out_dir,"xengsort/{sample}/{lane}/{sample}-k25"),
         prefetch=1,
         chunksize=16.0 ## in MB
     threads: 16
@@ -84,13 +113,11 @@ rule classify_sample:
 ### create symlinks to final outputs ...
 rule symlink_fastqs:
     input:
-        graft1 = os.path.join(out_dir,"xengsort/{sample}-k25-graft.1.fq.gz"),
-        graft2 = os.path.join(out_dir,"xengsort/{sample}-k25-graft.2.fq.gz"),
+        graft1 = os.path.join(out_dir, "xengsort/{sample}/{lane}/{sample}-k25-graft.1.fq.gz"),
+        graft2 = os.path.join(out_dir, "xengsort/{sample}/{lane}/{sample}-k25-graft.2.fq.gz"),
     output:
-        filtered_fastq1 = os.path.join(out_dir,"xengsort/{sample}_R1.filtered.fastq.gz"),
-        filtered_fastq2= os.path.join(out_dir,"xengsort/{sample}_R2.filtered.fastq.gz")
-    params:
-        grafts = os.path.join(out_dir,"xengsort/{sample}-k25-graft.*")
+        filtered_fastq1 = os.path.join(out_dir,"xengsort/{sample}/{lane}/{sample}_R1.filtered.fastq.gz"),
+        filtered_fastq2= os.path.join(out_dir,"xengsort/{sample}/{lane}/{sample}_R2.filtered.fastq.gz")
     threads: 1
     resources:
         mem_mb = 4000,

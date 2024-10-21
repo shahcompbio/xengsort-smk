@@ -3,10 +3,6 @@ channels:
   - conda-forge
   - r
   - bioconda
-  - componc
-  - aroth85
-  - dranew
-  - shahcompbio
   - defaults
 dependencies:
   - _libgcc_mutex=0.1=conda_forge
@@ -202,4 +198,4 @@ dependencies:
   - zipp=3.20.2=pyhd8ed1ab_0
   - zstandard=0.23.0=py312hef9b889_1
   - zstd=1.5.6=ha6fb4c9_0
-prefix: /home/preskaa/miniconda3/envs/snakedeploy
+prefix: snakedeploy
