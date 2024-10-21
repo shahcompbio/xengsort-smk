@@ -21,7 +21,9 @@ rule all:
         os.path.join(out_dir,"xengsort","xengsort-k25.info"),
         expand(os.path.join(out_dir, "xengsort/{sample}-k25-graft.1.fq.gz"),
             sample=sample_id),
-        expand(os.path.join(out_dir,"xengsort/{sample}.filtered.fastq.gz"),
+        expand(os.path.join(out_dir,"xengsort/{sample}_R1.filtered.fastq.gz"),
+            sample=sample_id),
+        expand(os.path.join(out_dir,"xengsort/{sample}_R2.filtered.fastq.gz"),
             sample=sample_id)
 
 # A rule that demonstrates how to build an index with xengsort
@@ -79,18 +81,20 @@ rule classify_sample:
         --fastq {input.fastq1} --pairs {input.fastq2} \
         --chunksize {params.chunksize} --mode count --prefetchlevel {params.prefetch}"
 
-### combine graft output into a single fastq ....
-rule combine_fastqs:
+### create symlinks to final outputs ...
+rule symlink_fastqs:
     input:
         graft1 = os.path.join(out_dir,"xengsort/{sample}-k25-graft.1.fq.gz"),
         graft2 = os.path.join(out_dir,"xengsort/{sample}-k25-graft.2.fq.gz"),
     output:
-        filtered_fastq = os.path.join(out_dir,"xengsort/{sample}.filtered.fastq.gz")
+        filtered_fastq1 = os.path.join(out_dir,"xengsort/{sample}_R1.filtered.fastq.gz"),
+        filtered_fastq2= os.path.join(out_dir,"xengsort/{sample}_R2.filtered.fastq.gz")
     params:
         grafts = os.path.join(out_dir,"xengsort/{sample}-k25-graft.*")
     threads: 1
     resources:
-        mem_mb = 50000,
-        time = 180
+        mem_mb = 4000,
+        time = 20
     shell:
-        "cat {params.grafts} > {output.filtered_fastq}"
+        "ln -s {input.graft1} {output.filtered_fastq1} "
+        "ln -s {input.graft2} {output.filtered_fastq2}"
