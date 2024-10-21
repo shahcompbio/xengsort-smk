@@ -12,8 +12,6 @@ singularity: "docker://quay.io/preskaa/xengsort:2.0.7"
 human_ref = config["human_refgenome"]
 mouse_ref = config["mouse_refgenome"]
 out_dir = config["out_dir"]
-fastq1 = config["fastq1"]
-fastq2 = config["fastq2"]
 sample_sheet = config["samples"]
 
 ### helper functions ####
