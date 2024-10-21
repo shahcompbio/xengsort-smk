@@ -96,5 +96,7 @@ rule symlink_fastqs:
         mem_mb = 4000,
         time = 20
     shell:
-        "ln -s {input.graft1} {output.filtered_fastq1} "
-        "ln -s {input.graft2} {output.filtered_fastq2}"
+        """
+        ln -s {input.graft1} {output.filtered_fastq1} &&
+        ln -s {input.graft2} {output.filtered_fastq2}
+        """
