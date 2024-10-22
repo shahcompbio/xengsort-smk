@@ -33,7 +33,7 @@ def _fetch_fastq1(wildcards):
    return fastq
 
 def _fetch_fastq2(wildcards):
-   sample_df = pd.read_csv(config["samples"])
+   sample_df = pd.read_csv(config["samples"], sep="\t")
    temp = sample_df[sample_df["lane"] == wildcards.lane]
    fastq = list(temp["fastq_2"])[0]
    return fastq
