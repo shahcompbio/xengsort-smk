@@ -27,7 +27,7 @@ def extract_metadata(sample_sheet):
     return sample_id, lanes
 
 def _fetch_fastq1(wildcards):
-   sample_df = pd.read_csv(config["samples"])
+   sample_df = pd.read_csv(config["samples"], sep="\t")
    temp = sample_df[sample_df["lane"] == wildcards.lane]
    fastq = list(temp["fastq_1"])[0]
    return fastq
