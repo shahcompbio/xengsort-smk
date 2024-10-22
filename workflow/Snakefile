@@ -21,7 +21,7 @@ def extract_metadata(sample_sheet):
     :param sample_sheet: input metadata for samples
     :return: sample id and lanes for WGS
     """
-    sample_df = pd.read_csv(sample_sheet)
+    sample_df = pd.read_csv(sample_sheet, sep="\t")
     sample_id = list(sample_df["sample_id"])[0]
     lanes = list(sample_df["lane"])
     return sample_id, lanes
