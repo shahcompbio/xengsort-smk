@@ -49,7 +49,7 @@ rule all:
         expand(os.path.join(out_dir, "xengsort/{sample}/{lane}/{sample}-k25-graft.1.fq.gz"),
             sample=sample_id, lane=lanes),
         expand(os.path.join(out_dir,"xengsort/{sample}/{lane}/{sample}_R1.filtered.fastq.gz"),
-            sample=sample_id),
+            sample=sample_id, lane=lanes),
         expand(os.path.join(out_dir,"xengsort/{sample}/{lane}/{sample}_R2.filtered.fastq.gz"),
             sample=sample_id, lane=lanes)
 
